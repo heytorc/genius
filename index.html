@@ -215,12 +215,12 @@
       <div class="square-center">
         <div id="score-label" class="hide animate__animated"></div>
         <div id="start-counter" class="hide animate__animated animate__faster"></div>
-        <button id="start-button" onclick="startGame()">START</button>
+        <button id="start-button" onclick="genius.startGenius()">START</button>
       </div>
-      <button id="red-button" class="genius-button red" onclick="pressButton(1)"></button>
-      <button id="green-button" class="genius-button green" onclick="pressButton(2)"></button>
-      <button id="blue-button" class="genius-button blue" onclick="pressButton(3)"></button>
-      <button id="yellow-button" class="genius-button yellow" onclick="pressButton(4)"></button>
+      <button id="red-button" class="genius-button red" onclick="genius.pressButton(1)"></button>
+      <button id="green-button" class="genius-button green" onclick="genius.pressButton(2)"></button>
+      <button id="blue-button" class="genius-button blue" onclick="genius.pressButton(3)"></button>
+      <button id="yellow-button" class="genius-button yellow" onclick="genius.pressButton(4)"></button>
     </div>
 
     <p id="feedback-label"></p>
@@ -255,175 +255,9 @@
       Your browser does not support the audio element.
     </audio>
   </div>
-  <script>
-    let sequence = [];
-    let currentSequence = 0;
-    let gameStarted = false;
-    let score = 0;
-    let playSequenceTimeoutOut, playSequenceTimeoutIn;
-    let timerCountDown;
-
-    const limit = 4;
-    const colorsOrder = ['red', 'green', 'blue', 'yellow'];
-
-    const feedbackLabel = document.getElementById('feedback-label');
-    const scoreLabel = document.getElementById('score-label');
-
-    const startButton = document.getElementById('start-button');
-    const startCounter = document.getElementById('start-counter');
-
-    const tapSound = document.getElementById('tap-sound');
-    const losingSound = document.getElementById('losing-sound');
-    const scoreSound = document.getElementById('score-sound');
-    const sequenceSound = document.getElementById('sequence-sound');
-    const startSound = document.getElementById('start-sound');
-    const ticTacSound = document.getElementById('tic-tac-sound');
-
-    async function startGame() {
-      resetGame();
-      feedbackLabel.innerText = "";
-
-      startButton.classList.add('hide');
-      startCounter.classList.remove('hide');
-
-      startSound.play();
-
-      for (let index = 0; index <= 3; index++) {
-        new Promise((resolve, reject) => {
-
-          startCounter.classList.remove('animate__slideInUp')
-          setTimeout(() => {
-            startCounter.innerText = `${3 - index}`;
-            startCounter.classList.add('animate__slideInUp')
-
-            if (index === 3) {
-              resolve()
-            }
-          }, 800 * (index))
-        })
-          .then(() => {
-            startCounter.innerText = `Já!`;
-
-            setTimeout(() => {
-              startCounter.classList.add('hide')
-              startCounter.innerText = '';
-              gameStarted = true;
-
-              scoreLabel.classList.remove('hide');
-              scoreLabel.innerHTML = score;
-
-              startButton.classList.add('hide');
-
-              generateSequence();
-            }, 900)
-          })
-
-      }
-    }
-
-    function resetGame() {
-      sequence = [];
-      score = 0;
-      currentSequence = 0;
-      gameStarted = false;
-      startButton.classList.remove('hide');
-      scoreLabel.classList.add('hide');
-
-      clearTimeout(playSequenceTimeoutOut);
-      clearTimeout(playSequenceTimeoutIn);
-      clearInterval(timerCountDown);
-    }
-
-    function loseGame() {
-      feedbackLabel.innerText = 'Você perdeu! 😵';
-      losingSound.play();
-      
-      ticTacSound.pause();
-      ticTacSound.currentTime = 0;
-
-      document.querySelectorAll(".genius-button").forEach(item => {
-        item.classList.remove('active');
-      })
-
-      resetGame();
-    }
-
-    async function generateSequence() {
-      clearInterval(timerCountDown);
-
-      const current = Math.floor(Math.random() * limit) + 1;
-
-      sequence.push(current);
-      currentSequence = 0;
-
-      await playSequence();
-      timerCountDown = countDown(5);
-    }
-
-    function pressButton(value) {
-      if (!gameStarted) return;
-
-      tapSound.pause();
-      tapSound.currentTime = 0;
-      tapSound.play();
-
-      scoreLabel.classList.remove('animate__heartBeat');
-
-      const current = sequence[currentSequence];
-
-      if (current === value) {
-        currentSequence++;
-
-        if (currentSequence === sequence.length) {
-          score++;
-          scoreLabel.classList.add('animate__heartBeat');
-          scoreLabel.innerHTML = score;
-          scoreSound.play();
-          generateSequence();
-        }
-      } else {
-        loseGame()
-      }
-    }
-
-    async function playSequence() {
-      ticTacSound.pause();
-      ticTacSound.currentTime = 0;
-
-      for (const value of sequence) {
-        const color = colorsOrder[value - 1];
-        const button = document.getElementById(`${color}-button`);
-
-        await new Promise((resolve, reject) => {
-          playSequenceTimeoutIn = setTimeout(() => {
-            sequenceSound.play();
-            button.classList.add('active');
-          }, 500);
-
-          playSequenceTimeoutOut = setTimeout(() => {
-            button.classList.remove('active');
-            resolve();
-          }, 1500);
-        })
-      }
-    }
-
-    function countDown(seconds) {
-      let counter = setInterval(function () {
-        ticTacSound.play();
-        seconds--;
-
-        if (seconds < 0) {
-          ticTacSound.pause();
-          ticTacSound.currentTime = 0;
-
-          clearInterval(counter);
-          loseGame();
-        }
-      }, 1000);
-
-      return counter;
-    }
+  <script type="text/javascript" src="./game.js"></script>
+  <script type="text/javascript">
+    const genius = new Genius();
   </script>
 </body>
 
