@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Genius</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Noto+Sans+Cherokee:wght@100;200;300;400;500;600;700;800;900&family=VT323&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+  <style>
+    * {
+      font-family: 'Montserrat', sans-serif;
+      font-family: 'Noto Sans Cherokee', sans-serif;
+      font-family: 'VT323', monospace;
+    }
+
+    body {
+      width: 100%;
+      height: 100vh;
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+
+      display: flex;
+      flex: 1;
+      justify-content: center;
+      align-items: center;
+    }
+
+    h1 {
+      color: #fff;
+      text-align: center;
+
+      font-size: 100px;
+
+      margin-bottom: 2rem;
+    }
+
+    .genius-container {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 4%;
+
+      position: relative;
+
+      width: 35rem;
+      height: 35rem;
+
+      padding: 1rem;
+
+      border-radius: 40px;
+      /* border: 1px solid #ccc; */
+
+      /* filter: drop-shadow(0px 0px 5px #c9c9c9); */
+
+      background: #232323;
+    }
+
+    .genius-button {
+      width: 48%;
+      height: 48%;
+
+      border: 0;
+
+      transition: .3s ease-in-out;
+
+      cursor: pointer;
+    }
+
+    .genius-button:active {
+      /* opacity: 50%; */
+      transform: scale(.9);
+    }
+
+    .genius-button.red {
+      background: #E53E3E;
+      border-top-left-radius: 40px;
+    }
+
+    .genius-button.red.active,
+    .genius-button.red:active {
+      filter: drop-shadow(5px 5px 65px #E53E3E);
+      transition: .3s ease-in-out;
+    }
+
+    .genius-button.blue {
+      background: #00B5D8;
+      border-bottom-left-radius: 40px;
+    }
+
+    .genius-button.blue.active,
+    .genius-button.blue:active {
+      filter: drop-shadow(5px 5px 65px #00B5D8);
+      transition: .3s ease-in-out;
+    }
+
+    .genius-button.green {
+      background: #38A169;
+      border-top-right-radius: 40px;
+    }
+
+    .genius-button.green.active,
+    .genius-button.green:active {
+      filter: drop-shadow(5px 5px 65px #38A169);
+      transition: .3s ease-in-out;
+    }
+
+    .genius-button.yellow {
+      background: #F6E05E;
+      border-bottom-right-radius: 40px
+    }
+
+    .genius-button.yellow.active,
+    .genius-button.yellow:active {
+      filter: drop-shadow(5px 5px 65px #F6E05E);
+      transition: .3s ease-in-out;
+    }
+
+    .menu {
+      padding: 1rem;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #start-button {
+      border: none;
+      padding: .5rem;
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+
+      font-size: 48px;
+
+      background: transparent;
+      color: #fff;
+
+      cursor: pointer;
+    }
+
+    #start-counter {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 100%;
+      height: 100%;
+
+      color: #fff;
+      font-size: 30px;
+    }
+
+    #start-button:hover {
+      opacity: 80%;
+    }
+
+    #sequence-label {
+      color: #fff;
+      text-align: center;
+    }
+
+    #score-label.hide {
+      display: none;
+    }
+
+    #score-label {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      width: 100%;
+      height: 100%;
+
+      font-size: 60px;
+
+      color: #fff;
+      text-align: center;
+    }
+
+    .square-center {
+      width: 12rem;
+      height: 12rem;
+      position: absolute;
+      /* top: 150px; */
+      z-index: 10;
+      margin: 0 auto;
+
+      border-radius: 15px;
+
+      background: #232323;
+    }
+
+    .hide {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container animate__animated animate__zoomIn">
+    <h1>Genius</h1>
+
+    <div class="genius-container">
+      <div class="square-center">
+        <div id="score-label" class="hide animate__animated"></div>
+        <div id="start-counter" class="hide animate__animated animate__faster"></div>
+        <button id="start-button" onclick="startGame()">START</button>
+      </div>
+      <button id="red-button" class="genius-button red" onclick="pressButton(1)"></button>
+      <button id="green-button" class="genius-button green" onclick="pressButton(2)"></button>
+      <button id="blue-button" class="genius-button blue" onclick="pressButton(3)"></button>
+      <button id="yellow-button" class="genius-button yellow" onclick="pressButton(4)"></button>
+    </div>
+
+    <p id="sequence-label"></p>
+
+    <audio id="tap-sound">
+      <source src="./sounds/mixkit-small-hit-in-a-game-2072.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+
+    <audio id="losing-sound">
+      <source src="./sounds/mixkit-player-losing-or-failing-2042.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+
+    <audio id="score-sound">
+      <source src="./sounds/mixkit-bonus-earned-in-video-game-2058.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+
+    <audio id="sequence-sound">
+      <source src="./sounds/mixkit-game-ball-tap-2073.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+
+    <audio id="start-sound">
+      <source src="./sounds/mixkit-race-countdown-1953.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+
+    <audio id="tic-tac-sound">
+      <source src="./sounds/mixkit-alarm-clock-beep-988.wav" type="audio/wav">
+      Your browser does not support the audio element.
+    </audio>
+  </div>
+  <script>
+    let sequence = [];
+    let currentSequence = 0;
+    let gameStarted = false;
+    let score = 0;
+    let playSequenceTimeoutOut, playSequenceTimeoutIn;
+    let timerCountDown;
+
+    const limit = 4;
+    const colorsOrder = ['red', 'green', 'blue', 'yellow'];
+
+    const label = document.getElementById('sequence-label');
+    const scoreLabel = document.getElementById('score-label');
+
+    const startButton = document.getElementById('start-button');
+    const startCounter = document.getElementById('start-counter');
+
+    const tapSound = document.getElementById('tap-sound');
+    const losingSound = document.getElementById('losing-sound');
+    const scoreSound = document.getElementById('score-sound');
+    const sequenceSound = document.getElementById('sequence-sound');
+    const startSound = document.getElementById('start-sound');
+    const ticTacSound = document.getElementById('tic-tac-sound');
+
+    async function startGame() {
+      resetGame();
+
+      startButton.classList.add('hide');
+      startCounter.classList.remove('hide');
+
+      startSound.play();
+
+      for (let index = 0; index <= 3; index++) {
+        new Promise((resolve, reject) => {
+
+          startCounter.classList.remove('animate__slideInUp')
+          setTimeout(() => {
+            startCounter.innerText = `${3 - index}`;
+            startCounter.classList.add('animate__slideInUp')
+
+            if (index === 3) {
+              resolve()
+            }
+          }, 800 * (index))
+        })
+          .then(() => {
+            startCounter.innerText = `Já!`;
+
+            setTimeout(() => {
+              startCounter.classList.add('hide')
+              startCounter.innerText = '';
+              gameStarted = true;
+
+              scoreLabel.classList.remove('hide');
+              scoreLabel.innerHTML = score;
+
+              startButton.classList.add('hide');
+
+              generateSequence();
+            }, 900)
+          })
+
+      }
+    }
+
+    function resetGame() {
+      sequence = [];
+      score = 0;
+      currentSequence = 0;
+      gameStarted = false;
+      startButton.classList.remove('hide');
+      scoreLabel.classList.add('hide');
+
+      clearTimeout(playSequenceTimeoutOut);
+      clearTimeout(playSequenceTimeoutIn);
+      clearInterval(timerCountDown);
+    }
+
+    function loseGame() {
+      label.innerText = 'Você perdeu! 😵';
+      losingSound.play();
+      resetGame();
+    }
+    async function generateSequence() {
+      clearInterval(timerCountDown);
+      const current = Math.floor(Math.random() * limit) + 1;
+
+      sequence.push(current);
+      currentSequence = 0;
+
+      label.innerText = sequence.toString();
+      await playSequence();
+      timerCountDown = countDown(5);
+    }
+
+    function pressButton(value) {
+      if (!gameStarted) return;
+
+      tapSound.pause();
+      tapSound.currentTime = 0;
+      tapSound.play();
+
+      scoreLabel.classList.remove('animate__heartBeat');
+
+      const current = sequence[currentSequence];
+
+      if (current === value) {
+        currentSequence++;
+
+        if (currentSequence === sequence.length) {
+          score++;
+          scoreLabel.classList.add('animate__heartBeat');
+          scoreLabel.innerHTML = score;
+          scoreSound.play();
+          generateSequence();
+        }
+      } else {
+        loseGame()
+      }
+    }
+
+    async function playSequence() {
+      for (const value of sequence) {
+        const color = colorsOrder[value - 1];
+        const button = document.getElementById(`${color}-button`);
+
+        await new Promise((resolve, reject) => {
+          playSequenceTimeoutIn = setTimeout(() => {
+            sequenceSound.play();
+            button.classList.add('active');
+          }, 500);
+
+          playSequenceTimeoutOut = setTimeout(() => {
+            button.classList.remove('active');
+            resolve();
+          }, 1500);
+        })
+      }
+    }
+
+    function countDown(seconds) {
+      let counter = setInterval(function () {
+        console.log(seconds);
+        ticTacSound.play();
+        seconds--;
+
+        if (seconds < 0) {
+          ticTacSound.pause();
+          ticTacSound.currentTime = 0;
+
+          clearInterval(counter);
+          console.log("Contagem regressiva concluída!");
+          loseGame();
+        }
+      }, 1000);
+
+      return counter;
+    }
+  </script>
+</body>
+
+</html>
