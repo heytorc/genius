@@ -336,14 +336,15 @@
       losingSound.play();
       resetGame();
     }
+
     async function generateSequence() {
       clearInterval(timerCountDown);
+
       const current = Math.floor(Math.random() * limit) + 1;
 
       sequence.push(current);
       currentSequence = 0;
 
-      label.innerText = sequence.toString();
       await playSequence();
       timerCountDown = countDown(5);
     }
@@ -375,6 +376,9 @@
     }
 
     async function playSequence() {
+      ticTacSound.pause();
+      ticTacSound.currentTime = 0;
+
       for (const value of sequence) {
         const color = colorsOrder[value - 1];
         const button = document.getElementById(`${color}-button`);
@@ -395,7 +399,6 @@
 
     function countDown(seconds) {
       let counter = setInterval(function () {
-        console.log(seconds);
         ticTacSound.play();
         seconds--;
 
@@ -404,7 +407,6 @@
           ticTacSound.currentTime = 0;
 
           clearInterval(counter);
-          console.log("Contagem regressiva concluída!");
           loseGame();
         }
       }, 1000);
