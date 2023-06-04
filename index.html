@@ -51,8 +51,8 @@
 
       position: relative;
 
-      width: 35rem;
-      height: 35rem;
+      width: 300px;
+      height: 300px;
 
       padding: 1rem;
 
@@ -139,7 +139,7 @@
       height: 100%;
       border-radius: 8px;
 
-      font-size: 48px;
+      font-size: 38px;
 
       background: transparent;
       color: #fff;
@@ -163,9 +163,11 @@
       opacity: 80%;
     }
 
-    #sequence-label {
+    #feedback-label {
       color: #fff;
       text-align: center;
+
+      font-size: 30px;
     }
 
     #score-label.hide {
@@ -180,15 +182,15 @@
       width: 100%;
       height: 100%;
 
-      font-size: 60px;
+      font-size: 30px;
 
       color: #fff;
       text-align: center;
     }
 
     .square-center {
-      width: 12rem;
-      height: 12rem;
+      width: 8rem;
+      height: 8rem;
       position: absolute;
       /* top: 150px; */
       z-index: 10;
@@ -221,7 +223,7 @@
       <button id="yellow-button" class="genius-button yellow" onclick="pressButton(4)"></button>
     </div>
 
-    <p id="sequence-label"></p>
+    <p id="feedback-label"></p>
 
     <audio id="tap-sound">
       <source src="./sounds/mixkit-small-hit-in-a-game-2072.wav" type="audio/wav">
@@ -264,7 +266,7 @@
     const limit = 4;
     const colorsOrder = ['red', 'green', 'blue', 'yellow'];
 
-    const label = document.getElementById('sequence-label');
+    const feedbackLabel = document.getElementById('feedback-label');
     const scoreLabel = document.getElementById('score-label');
 
     const startButton = document.getElementById('start-button');
@@ -279,6 +281,7 @@
 
     async function startGame() {
       resetGame();
+      feedbackLabel.innerText = "";
 
       startButton.classList.add('hide');
       startCounter.classList.remove('hide');
@@ -332,8 +335,16 @@
     }
 
     function loseGame() {
-      label.innerText = 'Você perdeu! 😵';
+      feedbackLabel.innerText = 'Você perdeu! 😵';
       losingSound.play();
+      
+      ticTacSound.pause();
+      ticTacSound.currentTime = 0;
+
+      document.querySelectorAll(".genius-button").forEach(item => {
+        item.classList.remove('active');
+      })
+
       resetGame();
     }
 
